@@ -21,10 +21,13 @@ class Player(pygame.sprite.Sprite):
         # Update the position of this object by setting the values of rect.x and rect.y
         self.rect = self.image.get_rect()
 
+        # How fast the player can move
+        self.velocity = 10
 
-    def starting_position(self, x, y):
+    # TODO: Use getters and setters ?
+    def set_position(self, x, y):
         '''
-        This defines where the palyer will start in a level
+        This defines where the player will start in a level
         :param x: x position of the screen
         :param y: y position of the screen
         :return: none
@@ -35,13 +38,13 @@ class Player(pygame.sprite.Sprite):
 
 
 
+
 # Initialize Pygame
 pygame.init()
 
 # Display settings
 screen_size = screen_width, screen_height = (800, 600)
 display = pygame.display.set_mode(screen_size)
-display.fill(color=BLACK)
 pygame.display.set_caption('Welcome!')
 
 # Create a clock for the game
@@ -53,11 +56,12 @@ all_sprites_list = pygame.sprite.Group()
 # Initialize a player
 player = Player(color=RED, width=50, height=50)
 all_sprites_list.add(player)
+player.set_position(x=10, y=20)
 
-player.starting_position(x=10, y=20)
 # Run game until it crashes
 crashed = False
 while not crashed:
+    display.fill(color=BLACK)
 
     # Check for any event
     for event in pygame.event.get():
@@ -65,23 +69,23 @@ while not crashed:
             crashed = True
             break
 
-        # Key Movement
-        if event.type == pygame.KEYDOWN:
+    # Key Movement for player
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT]:
+        player.rect.x -= player.velocity
+    if keys[pygame.K_RIGHT]:
+        player.rect.x += player.velocity
+    if keys[pygame.K_UP]:
+        player.rect.y -= player.velocity
+    if keys[pygame.K_DOWN]:
+        player.rect.y += player.velocity
 
-            if event.key == pygame.K_LEFT:
-                pass
-            if event.key == pygame.K_RIGHT:
-                pass
-            if event.key == pygame.K_UP:
-                pass
-            if event.key == pygame.K_DOWN:
-                pass
 
     # Draw all sprites
     all_sprites_list.draw(display)
 
     # Update the display
-    pygame.display.update()
+    pygame.display.flip()
 
     # 60 frames per second
     clock.tick(60)
