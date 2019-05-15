@@ -84,6 +84,9 @@ class Enemy(pygame.sprite.Sprite):
 # Initialize Pygame
 pygame.init()
 
+# Since this is a 2d game, all positions will consist of x and y values
+Position = namedtuple('Position', ['x', 'y'])
+
 # Display settings
 screen_size = screen_width, screen_height = (800, 700)
 display = pygame.display.set_mode(screen_size)
@@ -100,9 +103,10 @@ all_sprites_list = pygame.sprite.Group()
 enemies = pygame.sprite.Group()
 
 # Initialize a player
+player_start = Position(x=10, y=10)
 player = Player(color=RED, width=50, height=50)
 all_sprites_list.add(player)
-player.set_position(x=10, y=20)
+player.starting_postion(x=player_start.x, y=player_start.y)
 
 # Initialize some enemies
 enemy1 = Enemy()
@@ -135,10 +139,9 @@ while not crashed:
     if keys[pygame.K_DOWN]:
         player.rect.y += player.velocity
 
-
-    # Check for collison
-    collison = pygame.sprite.spritecollide(sprite=player, group=enemies, dokill=False)
-    if collison:
+    # Check for collision between the player and the enemies
+    collision = pygame.sprite.spritecollide(sprite=player, group=enemies, dokill=False)
+    if collision:
         time.sleep(.5)
         player.starting_postion(x=10, y=20)
 
