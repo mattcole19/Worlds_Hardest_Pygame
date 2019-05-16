@@ -35,32 +35,35 @@ class Player(pygame.sprite.Sprite):
 
     def move(self, direction):
         '''
-        Moves player on screen
+        Moves player on screen.  Have to enforce boundaries so player can't leave the screen.
         :param direction: LEFT, RIGHT, UP, or DOWN
         :return:
         '''
 
         if direction == 'LEFT':
-            self.rect.x -= self.velocity
+            # Make sure player doesn't leave screen
+            if (self.rect.x - self.velocity) > 0:
+                self.rect.x -= self.velocity
+            # Set the position so it hits the wall
+            else:
+                self.rect.x = 0
         if direction == 'RIGHT':
-            self.rect.x += self.velocity
+            if (self.rect.x + self.width + self.velocity) < SCREEN_WIDTH:
+                self.rect.x += self.velocity
+            else:
+                self.rect.x = SCREEN_WIDTH - self.width
+        # TODO: Fix top boundary
         if direction == 'UP':
-            self.rect.y -= self.velocity
+            if (self.rect.y + self.velocity) > 0:
+                self.rect.y -= self.velocity
+            else:
+                self.rect.y = 0
         if direction == 'DOWN':
-            self.rect.y += self.velocity
+            if (self.rect.y + self.height + self.velocity) < SCREEN_HEIGHT:
+                self.rect.y += self.velocity
+            else:
+                self.rect.y = SCREEN_HEIGHT - self.height
 
-        return
-
-    # TODO: Use getters and setters ?
-    def set_position(self, x, y):
-        '''
-        This defines where the player will start in a level
-        :param x: x position of the screen
-        :param y: y position of the screen
-        :return:
-        '''
-        self.rect.x = x
-        self.rect.y = y
         return
 
     def starting_postion(self, x, y):
@@ -122,7 +125,7 @@ all_sprites_list = pygame.sprite.Group()
 enemies = pygame.sprite.Group()
 
 # Initialize a player
-player_start = Position(x=10, y=10)
+player_start = Position(x=0, y=0)
 player = Player()
 all_sprites_list.add(player)
 player.starting_postion(x=player_start.x, y=player_start.y)
