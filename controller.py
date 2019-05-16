@@ -1,7 +1,7 @@
 import pygame
 from collections import namedtuple
 import time
-
+from Objects import var
 
 # Some namedtuples that will be used to clear things up
 Color = namedtuple('Color', ['red', 'green', 'blue'])
@@ -132,6 +132,37 @@ class Gate(pygame.sprite.Sprite):
         self.rect.y = y
 
 
+class Menu():
+
+    def __init__(self):
+        self.background = WHITE
+        self.titleStyle = pygame.font.Font('freesansbold.ttf', 100)
+        self.title = 'Game'
+
+    def show(self):
+        return
+
+
+def game_intro(menu):
+    '''
+    Introduction menu for the user
+    :return: none
+    '''
+
+    intro = True
+    while intro:
+        # Check for any event
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        # Show menu
+        display.fill(WHITE)
+        menu.show()
+
+
+
 # Initialize pygame
 pygame.init()
 
@@ -179,14 +210,17 @@ all_sprites_list.add(player)  # this has to be the last sprite added in order to
 
 # Run game until it crashes
 crashed = False
+
+menu = Menu()
+game_intro(menu=menu)
 while not crashed:
     display.fill(color=BLACK)
 
     # Check for any event
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            crashed = True
-            break
+            pygame.quit()
+            quit()
 
     # Key Movement for player
     keys = pygame.key.get_pressed()
