@@ -19,6 +19,7 @@ FPS = 60
 
 # Start and End Settings
 START_SIZE = END_SIZE = Size(width=100, height=100)
+GATE_SIZE = START_SIZE
 
 
 class Player(pygame.sprite.Sprite):
@@ -74,7 +75,7 @@ class Player(pygame.sprite.Sprite):
 
     def starting_postion(self, x, y):
         '''
-        Sets the starting postion of the player
+        Sets the starting position of the player
         :param x: starting x
         :param y: starting y
         :return:
@@ -112,7 +113,26 @@ class Enemy(pygame.sprite.Sprite):
         return
 
 
-# Initialize Pygame
+class Gate(pygame.sprite.Sprite):
+    '''
+    Exit and Entrance to level
+    '''
+    width = GATE_SIZE.width
+    height = GATE_SIZE.height
+
+    def __init__(self, x, y):
+        super().__init__()
+
+        # Create the image for the gate
+        self.image = pygame.Surface((self.width, self.height))
+        self.image.fill(color=WHITE)
+
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+
+# Initialize pygame
 pygame.init()
 
 
@@ -128,10 +148,12 @@ all_sprites_list = pygame.sprite.Group()
 # List of enemies
 enemies = pygame.sprite.Group()
 
+# Exit
+level_exit = pygame.sprite.Group()
+
 # Initialize a player
 player_start = Position(x=0, y=0)
 player = Player()
-all_sprites_list.add(player)
 player.starting_postion(x=player_start.x, y=player_start.y)
 
 # Initialize some enemies
@@ -140,21 +162,25 @@ enemy1.set_position(400, 300)
 enemy2 = Enemy()
 enemy2.set_position(200, 200)
 
-all_sprites_list.add(enemy1, enemy2)  # May not even need this
+all_sprites_list.add(enemy1, enemy2)
 enemies.add(enemy1, enemy2)
 
 # hard coding the start position for now to the bottom right corner
 end_position = Position(x=SCREEN_WIDTH - END_SIZE.width, y=SCREEN_HEIGHT - END_SIZE.height)
 start_position = Position(x=0, y=0)
 
+# Start and end gates for the level
+start_gate = Gate(x=start_position.x, y=start_position.y)
+end_gate = Gate(x=end_position.x, y=end_position.y)
+all_sprites_list.add(start_gate, end_gate)
+level_exit.add(end_gate)
+
+all_sprites_list.add(player)  # this has to be the last sprite added in order to take priority
+
 # Run game until it crashes
 crashed = False
 while not crashed:
     display.fill(color=BLACK)
-
-    # Draw start and end
-    pygame.draw.rect(display, WHITE, (end_position.x, end_position.y, END_SIZE.width, END_SIZE.height))
-    pygame.draw.rect(display, WHITE, (start_position.x, start_position.y, START_SIZE.width, START_SIZE.height))
 
     # Check for any event
     for event in pygame.event.get():
@@ -178,6 +204,11 @@ while not crashed:
     if collision:
         time.sleep(.5)
         player.starting_postion(x=10, y=20)
+
+    # Check to see if player made it to the end
+    win = pygame.sprite.spritecollide(sprite=player, group=level_exit, dokill=False)
+    if win:
+        print('You win!')
 
     # Draw all sprites
     all_sprites_list.draw(display)
