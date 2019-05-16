@@ -3,16 +3,22 @@ from collections import namedtuple
 import time
 
 
-# Some colors that will be used
+# Some namedtuples that will be used to clear things up
 Color = namedtuple('Color', ['red', 'green', 'blue'])
+Position = namedtuple('Position', ['x', 'y'])
+Size = namedtuple('Size', ['width', 'height'])
+
 WHITE = Color(red=255, green=255, blue=255)
 BLACK = Color(red=0, green=0, blue=0)
 RED = Color(red=255, green=0, blue=0)
 BLUE = Color(red=0, green=0, blue=255)
 
-# Settings
+# Screen Settings
 SCREEN_SIZE = SCREEN_WIDTH, SCREEN_HEIGHT = (800, 700)
 FPS = 60
+
+# Start and End Settings
+START_SIZE = END_SIZE = Size(width=100, height=100)
 
 
 class Player(pygame.sprite.Sprite):
@@ -109,8 +115,6 @@ class Enemy(pygame.sprite.Sprite):
 # Initialize Pygame
 pygame.init()
 
-# Since this is a 2d game, all positions will consist of x and y values
-Position = namedtuple('Position', ['x', 'y'])
 
 display = pygame.display.set_mode(SCREEN_SIZE)
 pygame.display.set_caption('Welcome!')
@@ -132,17 +136,25 @@ player.starting_postion(x=player_start.x, y=player_start.y)
 
 # Initialize some enemies
 enemy1 = Enemy()
-enemy1.set_position(100, 100)
+enemy1.set_position(400, 300)
 enemy2 = Enemy()
 enemy2.set_position(200, 200)
 
 all_sprites_list.add(enemy1, enemy2)  # May not even need this
 enemies.add(enemy1, enemy2)
 
+# hard coding the start position for now to the bottom right corner
+end_position = Position(x=SCREEN_WIDTH - END_SIZE.width, y=SCREEN_HEIGHT - END_SIZE.height)
+start_position = Position(x=0, y=0)
+
 # Run game until it crashes
 crashed = False
 while not crashed:
     display.fill(color=BLACK)
+
+    # Draw start and end
+    pygame.draw.rect(display, WHITE, (end_position.x, end_position.y, END_SIZE.width, END_SIZE.height))
+    pygame.draw.rect(display, WHITE, (start_position.x, start_position.y, START_SIZE.width, START_SIZE.height))
 
     # Check for any event
     for event in pygame.event.get():
