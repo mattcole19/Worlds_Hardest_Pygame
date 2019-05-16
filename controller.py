@@ -3,7 +3,6 @@ from collections import namedtuple
 import time
 
 
-
 # Some colors that will be used
 Color = namedtuple('Color', ['red', 'green', 'blue'])
 WHITE = Color(red=255, green=255, blue=255)
@@ -11,16 +10,22 @@ BLACK = Color(red=0, green=0, blue=0)
 RED = Color(red=255, green=0, blue=0)
 BLUE = Color(red=0, green=0, blue=255)
 
+# Settings
+SCREEN_SIZE = SCREEN_WIDTH, SCREEN_HEIGHT = (800, 700)
+FPS = 60
 
 
 class Player(pygame.sprite.Sprite):
+    color = RED
+    width = 50
+    height = 50
 
-    def __init__(self, color, width, height):
+    def __init__(self):
         super().__init__()
 
         # Create an image of the player
-        self.image = pygame.Surface((width, height))
-        self.image.fill(color=color)
+        self.image = pygame.Surface((self.width, self.height))
+        self.image.fill(color=self.color)
 
         # Update the position of this object by setting the values of rect.x and rect.y
         self.rect = self.image.get_rect()
@@ -28,13 +33,31 @@ class Player(pygame.sprite.Sprite):
         # How fast the player can move
         self.velocity = 10
 
+    def move(self, direction):
+        '''
+        Moves player on screen
+        :param direction: LEFT, RIGHT, UP, or DOWN
+        :return:
+        '''
+
+        if direction == 'LEFT':
+            self.rect.x -= self.velocity
+        if direction == 'RIGHT':
+            self.rect.x += self.velocity
+        if direction == 'UP':
+            self.rect.y -= self.velocity
+        if direction == 'DOWN':
+            self.rect.y += self.velocity
+
+        return
+
     # TODO: Use getters and setters ?
     def set_position(self, x, y):
         '''
         This defines where the player will start in a level
         :param x: x position of the screen
         :param y: y position of the screen
-        :return: none
+        :return:
         '''
         self.rect.x = x
         self.rect.y = y
@@ -50,7 +73,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         return
-
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -87,11 +109,8 @@ pygame.init()
 # Since this is a 2d game, all positions will consist of x and y values
 Position = namedtuple('Position', ['x', 'y'])
 
-# Display settings
-screen_size = screen_width, screen_height = (800, 700)
-display = pygame.display.set_mode(screen_size)
+display = pygame.display.set_mode(SCREEN_SIZE)
 pygame.display.set_caption('Welcome!')
-FPS = 60
 
 # Create a clock for the game
 clock = pygame.time.Clock()
@@ -104,7 +123,7 @@ enemies = pygame.sprite.Group()
 
 # Initialize a player
 player_start = Position(x=10, y=10)
-player = Player(color=RED, width=50, height=50)
+player = Player()
 all_sprites_list.add(player)
 player.starting_postion(x=player_start.x, y=player_start.y)
 
@@ -131,13 +150,13 @@ while not crashed:
     # Key Movement for player
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
-        player.rect.x -= player.velocity
+        player.move(direction='LEFT')
     if keys[pygame.K_RIGHT]:
-        player.rect.x += player.velocity
+        player.move(direction='RIGHT')
     if keys[pygame.K_UP]:
-        player.rect.y -= player.velocity
+        player.move(direction='UP')
     if keys[pygame.K_DOWN]:
-        player.rect.y += player.velocity
+        player.move(direction='DOWN')
 
     # Check for collision between the player and the enemies
     collision = pygame.sprite.spritecollide(sprite=player, group=enemies, dokill=False)
