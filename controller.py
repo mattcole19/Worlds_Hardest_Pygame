@@ -1,13 +1,13 @@
 import pygame
 from collections import namedtuple
 import time
-from Objects import var
 
 # Some namedtuples that will be used to clear things up
 Color = namedtuple('Color', ['red', 'green', 'blue'])
 Position = namedtuple('Position', ['x', 'y'])
 Size = namedtuple('Size', ['width', 'height'])
 
+# Some colors
 WHITE = Color(red=255, green=255, blue=255)
 BLACK = Color(red=0, green=0, blue=0)
 RED = Color(red=255, green=0, blue=0)
@@ -73,7 +73,7 @@ class Player(pygame.sprite.Sprite):
 
         return
 
-    def starting_postion(self, x, y):
+    def starting_position(self, x, y):
         '''
         Sets the starting position of the player
         :param x: starting x
@@ -185,7 +185,7 @@ level_exit = pygame.sprite.Group()
 # Initialize a player
 player_start = Position(x=0, y=0)
 player = Player()
-player.starting_postion(x=player_start.x, y=player_start.y)
+player.starting_position(x=player_start.x, y=player_start.y)
 
 # Initialize some enemies
 enemy1 = Enemy()
@@ -255,3 +255,5 @@ while not crashed:
 
 # Quit out of pygame when it crashes
 pygame.quit()
+
+

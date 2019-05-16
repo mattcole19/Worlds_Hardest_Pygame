@@ -94,7 +94,7 @@ class Enemy(pygame.sprite.Sprite):
     width = 25
     height = 25
 
-    def __init__(self):
+    def __init__(self, x, y):
         super().__init__()
 
         # Create an image of the player
@@ -104,17 +104,25 @@ class Enemy(pygame.sprite.Sprite):
         # Update the position of this object by setting the values of rect.x and rect.y
         self.rect = self.image.get_rect()
 
-    # TODO: Use getters and setters ?
-    def set_position(self, x, y):
-        '''
-        This defines where the enemies will start in a level
-        :param x: x position of the screen
-        :param y: y position of the screen
-        :return: none
-        '''
         self.rect.x = x
         self.rect.y = y
-        return
+
+
+class StationaryEnemy(Enemy):
+    def __init__(self):
+        super().__init__()
+
+
+class MovingEnemy(Enemy):
+    def __init__(self, x, y, velocity, direction, path):
+        super().__init__(x, y)
+        self.velocity = velocity
+        self.direction = direction
+        #self.path = ((x, y), path)
+
+    def move(self):
+        self.rect.x += self.velocity
+
 
 
 class Gate(pygame.sprite.Sprite):
@@ -149,6 +157,7 @@ def main():
     # List of sprite groups
     all_sprites = pygame.sprite.Group()
     enemies = pygame.sprite.Group()
+    moving_enemies = pygame.sprite.Group()
     level_exit = pygame.sprite.Group()
 
     # Initialize a player
@@ -157,14 +166,15 @@ def main():
     player.starting_position(x=player_start.x, y=player_start.y)
 
     # Initialize some enemies
-    enemy1 = Enemy()
-    enemy1.set_position(400, 300)
-    enemy2 = Enemy()
-    enemy2.set_position(200, 200)
+    enemy1 = Enemy(x=400, y=300)
+    enemy2 = Enemy(x=200, y=200)
+
+    enemy3 = MovingEnemy(x=300, y=100, velocity=5, direction='L')
 
     # Add sprites to their corresponding groups
-    all_sprites.add(enemy1, enemy2)
-    enemies.add(enemy1, enemy2)
+    all_sprites.add(enemy1, enemy2, enemy3)
+    enemies.add(enemy1, enemy2, enemy3)
+    moving_enemies.add(enemy3)
 
     # hard coding the start position for now to the bottom right corner (levels will be different)
     end_position = Position(x=SCREEN_WIDTH - END_SIZE.width, y=SCREEN_HEIGHT - END_SIZE.height)
@@ -211,6 +221,10 @@ def main():
         win = pygame.sprite.spritecollide(sprite=player, group=level_exit, dokill=False)
         if win:
             print('You win!')
+
+        # Keeps moving enemies in action
+        for enemy in moving_enemies:
+            enemy.move()
 
         # Draw all sprites
         all_sprites.draw(display)
