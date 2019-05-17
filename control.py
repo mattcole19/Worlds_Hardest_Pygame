@@ -94,7 +94,7 @@ class Enemy(pygame.sprite.Sprite):
     width = 25
     height = 25
 
-    def __init__(self, x, y):
+    def __init__(self, start):
         super().__init__()
 
         # Create an image of the player
@@ -104,25 +104,33 @@ class Enemy(pygame.sprite.Sprite):
         # Update the position of this object by setting the values of rect.x and rect.y
         self.rect = self.image.get_rect()
 
-        self.rect.x = x
-        self.rect.y = y
-
-
-class StationaryEnemy(Enemy):
-    def __init__(self):
-        super().__init__()
+        self.rect.x = start.x
+        self.rect.y = start.y
 
 
 class MovingEnemy(Enemy):
-    def __init__(self, x, y, velocity, direction, path):
-        super().__init__(x, y)
+    '''
+    This allows some enemies to move
+    '''
+    def __init__(self, start, end, velocity, direction):
+        super().__init__(start)
         self.velocity = velocity
         self.direction = direction
-        #self.path = ((x, y), path)
+        self.start = start
+        self.end = end
 
     def move(self):
-        self.rect.x += self.velocity
-
+        ''' Only allows sideways movement at the time being '''
+        if self.velocity > 0:
+            if self.rect.x + self.velocity < self.end.x:
+                self.rect.x += self.velocity
+            else:
+                self.velocity *= -1
+        else:
+            if self.rect.x + self.velocity > self.start.x:
+                self.rect.x += self.velocity
+            else:
+                self.velocity *= -1
 
 
 class Gate(pygame.sprite.Sprite):
@@ -166,10 +174,10 @@ def main():
     player.starting_position(x=player_start.x, y=player_start.y)
 
     # Initialize some enemies
-    enemy1 = Enemy(x=400, y=300)
-    enemy2 = Enemy(x=200, y=200)
+    enemy1 = Enemy(start=Position(x=100, y=100))
+    enemy2 = Enemy(start=Position(x=500, y=500))
 
-    enemy3 = MovingEnemy(x=300, y=100, velocity=5, direction='L')
+    enemy3 = MovingEnemy(start=Position(x=250, y=250), end=Position(x=500, y=500), velocity=5, direction='L')
 
     # Add sprites to their corresponding groups
     all_sprites.add(enemy1, enemy2, enemy3)
@@ -241,4 +249,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
