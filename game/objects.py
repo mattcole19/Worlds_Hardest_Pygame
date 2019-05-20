@@ -4,15 +4,14 @@ all the levels will need (player, enemies, obstacles, etc.)
 '''
 
 
-from game import display, clock
 import pygame
 from game.globals import *
 
 
 class Player(pygame.sprite.Sprite):
     color = RED
-    width = 50
-    height = 50
+    width = BLOCK_WIDTH
+    height = BLOCK_HEIGHT
 
     def __init__(self):
         super().__init__()
@@ -25,7 +24,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
         # How fast the player can move
-        self.velocity = 10
+        self.velocity = BLOCK_HEIGHT / 4
 
     def move(self, direction):
         '''
@@ -35,30 +34,32 @@ class Player(pygame.sprite.Sprite):
         '''
 
         if direction == 'LEFT':
-            # Make sure player doesn't leave screen
-            if (self.rect.x - self.velocity) > 0:
+            if (self.rect.left - self.velocity) > 0:
                 self.rect.x -= self.velocity
-            # Set the position so it hits the wall
             else:
-                self.rect.x = 0
+                self.rect.left = 0
+
         if direction == 'RIGHT':
-            if (self.rect.x + self.width + self.velocity) < SCREEN_WIDTH:
+            if (self.rect.right + self.velocity) < DISPLAY_WIDTH:
                 self.rect.x += self.velocity
             else:
-                self.rect.x = SCREEN_WIDTH - self.width
+                self.rect.right = DISPLAY_WIDTH
+
         # TODO: Fix top boundary
         if direction == 'UP':
-            if (self.rect.y + self.velocity) > 0:
+            if (self.rect.top - self.velocity) > 0:
                 self.rect.y -= self.velocity
             else:
-                self.rect.y = 0
+                self.rect.top = 0
+
         if direction == 'DOWN':
-            if (self.rect.y + self.height + self.velocity) < SCREEN_HEIGHT:
+            if (self.rect.bottom + self.velocity) < DISPLAY_HEIGHT:
                 self.rect.y += self.velocity
             else:
-                self.rect.y = SCREEN_HEIGHT - self.height
+                self.rect.bottom = DISPLAY_HEIGHT
 
         return
+
 
     def starting_position(self, x, y):
         '''
@@ -77,7 +78,7 @@ class Enemy(pygame.sprite.Sprite):
     width = 25
     height = 25
 
-    def __init__(self, start):
+    def __init__(self, x, y):
         super().__init__()
 
         # Create an image of the player
@@ -87,8 +88,8 @@ class Enemy(pygame.sprite.Sprite):
         # Update the position of this object by setting the values of rect.x and rect.y
         self.rect = self.image.get_rect()
 
-        self.rect.x = start.x
-        self.rect.y = start.y
+        self.rect.x = x
+        self.rect.y = y
 
 
 class MovingEnemy(Enemy):
@@ -167,12 +168,10 @@ class Wall:
     '''
     Creates walls in the level
     '''
-    width = 50
-    height = 50
+    width = BLOCK_WIDTH
+    height = BLOCK_HEIGHT
 
     def __init__(self, x, y):
         self.rect = pygame.Rect(x, y, self.width, self.height)
-
-
 
 

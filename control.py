@@ -314,6 +314,7 @@ def main():
         for wall in walls:
             pygame.draw.rect(display, PURPLE, wall.rect)
 
+
         collect_coins = pygame.sprite.spritecollide(sprite=player, group=coins, dokill=True)
 
         # Draw all sprites
