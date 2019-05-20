@@ -16,6 +16,7 @@ BLACK = Color(red=0, green=0, blue=0)
 RED = Color(red=255, green=0, blue=0)
 BLUE = Color(red=0, green=0, blue=255)
 YELLOW = Color(red=255, green=255, blue=0)
+PURPLE = Color(red=255, green=0, blue=255)
 
 # Screen Settings
 SCREEN_SIZE = SCREEN_WIDTH, SCREEN_HEIGHT = (800, 700)
@@ -186,6 +187,34 @@ class Coin(Collectible):
 
 ''' END SPRITE CLASSES '''
 
+class Wall:
+    '''
+    Creates walls in the level
+    '''
+    width = 50
+    height = 50
+    def __init__(self, x, y):
+        self.rect = pygame.Rect(x, y, self.width, self.height)
+
+
+
+# row consists of 16 columns, 14 rows (screen / wall)
+mock_level = [
+    "WWWWWWWWWWWWWWWW",
+    "W              W",
+    "W              W",
+    "W              W",
+    "W              W",
+    "W              W",
+    "W              W",
+    "W              W",
+    "W              W",
+    "W              W",
+    "W              W",
+    "W              W",
+    "W              W",
+    "WWWWWWWWWWWWWWWW",
+]
 
 def main():
     # Initialize pygame display
@@ -202,6 +231,17 @@ def main():
     moving_enemies = pygame.sprite.Group()
     level_exit = pygame.sprite.Group()
     coins = pygame.sprite.Group()
+
+    y = 0
+    walls = []
+    for row in mock_level:
+        x = 0
+        for block in row:
+            if block == 'W':
+                wall = Wall(x=x, y=y)
+                walls.append(wall)
+            x += 50
+        y += 50
 
     coin = Coin(x=150, y=250)
     coins.add(coin)
@@ -224,7 +264,7 @@ def main():
 
     # hard coding the start position for now to the bottom right corner (levels will be different)
     end_position = Position(x=SCREEN_WIDTH - END_SIZE.width, y=SCREEN_HEIGHT - END_SIZE.height)
-    start_position = Position(x=0, y=0)
+    start_position = Position(x=100, y=300)
 
     # Start and end gates for the level
     start_gate = Gate(x=start_position.x, y=start_position.y)
@@ -270,6 +310,9 @@ def main():
         # Keeps moving enemies in action
         for enemy in moving_enemies:
             enemy.move()
+
+        for wall in walls:
+            pygame.draw.rect(display, PURPLE, wall.rect)
 
         collect_coins = pygame.sprite.spritecollide(sprite=player, group=coins, dokill=True)
 
