@@ -22,15 +22,16 @@ player = Player()
 
 def draw_level(level, xchange, ychange):
     '''
-    Creates current level by parsing a list of strings
+    Creates current level by parsing a list of strings. The grid starts outside of the screen to make it so the player
+    can't leave the screen.
     :param level: list
     :param xchange: int
     :param ychange: int
     :return: none
     '''
-    y = 0
+    y = -BLOCK_HEIGHT
     for row in level:
-        x = 0
+        x = -BLOCK_WIDTH
         for block in row:
             if block == 'W':
                 wall = Wall(x=x, y=y)
@@ -43,11 +44,14 @@ def draw_level(level, xchange, ychange):
                 coin = Coin(x=x, y=y)
                 all_sprites.add(coin)
                 coins.add(coin)
+            elif block == 'X':
+                exit_gate = Gate(x=x, y=y)
+                all_sprites.add(exit_gate)
             elif block == 'P':
-                player.starting_position(x, y)
-                all_sprites.add(player)
+                player.starting_position(x=x, y=y)
             x += xchange
         y += ychange
+    all_sprites.add(player)
     return
 
 
