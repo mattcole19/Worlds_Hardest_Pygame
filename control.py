@@ -1,6 +1,7 @@
 import pygame
 from collections import namedtuple
 import time
+import sys
 
 
 ''' START GLOBAL VARIABLES '''
@@ -14,6 +15,7 @@ WHITE = Color(red=255, green=255, blue=255)
 BLACK = Color(red=0, green=0, blue=0)
 RED = Color(red=255, green=0, blue=0)
 BLUE = Color(red=0, green=0, blue=255)
+YELLOW = Color(red=255, green=255, blue=0)
 
 # Screen Settings
 SCREEN_SIZE = SCREEN_WIDTH, SCREEN_HEIGHT = (800, 700)
@@ -150,6 +152,38 @@ class Gate(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
+
+class Collectible(pygame.sprite.Sprite):
+    '''
+    Collectible items
+    '''
+    def __init__(self):
+        super().__init__()
+
+
+class Coin(Collectible):
+    '''
+    All coins must be collected to pass a level. Currently takes a hitbox of a rectangle, could switch it later
+    '''
+    width = 25
+    height = 25
+
+    def __init__(self, x, y):
+        super().__init__()
+
+        self.image = pygame.Surface((self.width, self.height))
+        self.image.fill(color=BLACK)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+        # draws
+        pygame.draw.ellipse(self.image, YELLOW, (0, 0, self.width, self.height))
+
+
+
+
 ''' END SPRITE CLASSES '''
 
 
@@ -167,6 +201,11 @@ def main():
     enemies = pygame.sprite.Group()
     moving_enemies = pygame.sprite.Group()
     level_exit = pygame.sprite.Group()
+    coins = pygame.sprite.Group()
+
+    coin = Coin(x=150, y=250)
+    coins.add(coin)
+    all_sprites.add(coin)
 
     # Initialize a player
     player_start = Position(x=0, y=0)
@@ -176,7 +215,6 @@ def main():
     # Initialize some enemies
     enemy1 = Enemy(start=Position(x=100, y=100))
     enemy2 = Enemy(start=Position(x=500, y=500))
-
     enemy3 = MovingEnemy(start=Position(x=250, y=250), end=Position(x=500, y=500), velocity=5, direction='L')
 
     # Add sprites to their corresponding groups
@@ -198,7 +236,6 @@ def main():
 
     # Run game until it crashes
     crashed = False
-
     while not crashed:
         display.fill(color=BLACK)
 
@@ -234,6 +271,8 @@ def main():
         for enemy in moving_enemies:
             enemy.move()
 
+        collect_coins = pygame.sprite.spritecollide(sprite=player, group=coins, dokill=True)
+
         # Draw all sprites
         all_sprites.draw(display)
 
@@ -245,7 +284,7 @@ def main():
 
     # Quit out of pygame when it crashes
     pygame.quit()
-    quit()
+    sys.exit()
 
 if __name__ == '__main__':
     main()
