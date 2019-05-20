@@ -32,31 +32,33 @@ class Player(pygame.sprite.Sprite):
         :param direction: LEFT, RIGHT, UP, or DOWN
         :return:
         '''
-
         if direction == 'LEFT':
-            if (self.rect.left - self.velocity) > 0:
-                self.rect.x -= self.velocity
-            else:
-                self.rect.left = 0
+            self.rect.x -= self.velocity
+            for wall in walls:
+                if self.rect.colliderect(wall.rect):
+                    self.rect.left = wall.rect.right
+                    return
 
         if direction == 'RIGHT':
-            if (self.rect.right + self.velocity) < DISPLAY_WIDTH:
-                self.rect.x += self.velocity
-            else:
-                self.rect.right = DISPLAY_WIDTH
+            self.rect.x += self.velocity
+            for wall in walls:
+                if self.rect.colliderect(wall.rect):
+                    self.rect.right = wall.rect.left
+                    return
 
-        # TODO: Fix top boundary
         if direction == 'UP':
-            if (self.rect.top - self.velocity) > 0:
-                self.rect.y -= self.velocity
-            else:
-                self.rect.top = 0
+            self.rect.y -= self.velocity
+            for wall in walls:
+                if self.rect.colliderect(wall.rect):
+                    self.rect.top = wall.rect.bottom
+                    return
 
         if direction == 'DOWN':
-            if (self.rect.bottom + self.velocity) < DISPLAY_HEIGHT:
-                self.rect.y += self.velocity
-            else:
-                self.rect.bottom = DISPLAY_HEIGHT
+            self.rect.y += self.velocity
+            for wall in walls:
+                if self.rect.colliderect(wall.rect):
+                    self.rect.bottom = wall.rect.top
+                    return
 
         return
 

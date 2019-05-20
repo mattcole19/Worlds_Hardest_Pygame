@@ -33,25 +33,3 @@ def level1():
     ]
     return level
 
-base_level = [
-    "WWWWWWWWWWWWWWWWWWWW",
-    "W                  W",
-    "W                  W",
-    "W                  W",
-    "W                  W",
-    "W                  W",
-    "W                  W",
-    "W                  W",
-    "W                  W",
-    "W                  W",
-    "W                  W",
-    "W                  W",
-    "W                  W",
-    "W                  W",
-    "W                  W",
-    "W                  W",
-    "W                  W",
-    "W                  W",
-    "W                  W",
-    "WWWWWWWWWWWWWWWWWWWW",
-    ]

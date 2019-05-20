@@ -85,7 +85,8 @@ def main():
         collision = pygame.sprite.spritecollide(sprite=player, group=enemies, dokill=False)
         if collision:
             time.sleep(.5)
-            player.starting_position(x=10, y=20)
+            #player.starting_position(x=10, y=20)
+            main()
 
         # Check to see if player made it to the end
         win = pygame.sprite.spritecollide(sprite=player, group=level_exit, dokill=False)
