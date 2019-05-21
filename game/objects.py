@@ -98,10 +98,9 @@ class MovingEnemy(Enemy):
     '''
     This allows some enemies to move
     '''
-    def __init__(self, start, end, velocity, direction):
-        super().__init__(start)
+    def __init__(self, start, end, velocity):
+        super().__init__(start.x, start.y)
         self.velocity = velocity
-        self.direction = direction
         self.start = start
         self.end = end
 

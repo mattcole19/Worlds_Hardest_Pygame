@@ -5,6 +5,10 @@ P = Start
 X = Exit
 C = Coin
 E = Stationary Enemy
+any lowercase letter = Moving enemy start position
+any other uppercase letter = Moving enemy end position (if there is no end, it will hit the wall and bounce back)
+
+This probably isn't the best way to create levels (especially for moving enemies, but it will have to due for now)
 Base Level with walls keeping player in screen:
     "WWWWWWWWWWWWWWWWWWWWWW",
     "W                    W",
@@ -32,13 +36,14 @@ Base Level with walls keeping player in screen:
 
 
 
-def level1() -> list:
+def level1() -> tuple:
+    velocity_dict = {'a': 10, 'b': 5} # This dictionary keeps track of the velocity of the enemy
     level = [
     "WWWWWWWWWWWWWWWWWWWWWW",
     "WP                   W",
-    "W                    W",
+    "W         a    C    AW",
     "WWWWWWWWWWWWWWWWWWWW W",
-    "WC            C      W",
+    "Wb            C     BW",
     "W    C        C      W",
     "W  WWWWWWWWWWWWWWWWWWW",
     "W                   EW",
@@ -57,5 +62,6 @@ def level1() -> list:
     "W                   XW",
     "WWWWWWWWWWWWWWWWWWWWWW",
     ]
-    return level
+    return level, velocity_dict
+
 

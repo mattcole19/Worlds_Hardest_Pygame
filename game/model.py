@@ -20,35 +20,82 @@ DISPLAY_WIDTH, DISPLAY_HEIGHT = DISPLAY_DIMENSIONS
 player = Player()
 
 
-def draw_level(level, xchange, ychange):
+def reset_sprites():
+    '''
+    Removes all sprites from the groups
+    :return:
+    '''
+    all_sprites.empty()
+    enemies.empty()
+    moving_enemies.empty()
+    coins.empty()
+    level_exit.empty()
+    return
+
+def find_end(letter, grid):
+    '''
+    Finds the ending position for the moving enemy
+    :param letter: uppercase letter
+    :param grid: list of strings
+    :return: ending position
+    '''
+    y = -BLOCK_HEIGHT
+    for row in grid:
+        x = -BLOCK_WIDTH
+        for character in row:
+            if character == letter:
+                print(f'character: {character}')
+                # found end postion
+                end = Position(x=x, y=y)
+                return end
+            x += BLOCK_WIDTH
+        y += BLOCK_HEIGHT
+    print("Couldn't find end for enemy!")  # TODO: Make this an error
+
+
+def draw_level(level, velocity_dict, xchange, ychange):
     '''
     Creates current level by parsing a list of strings. The grid starts outside of the screen to make it so the player
     can't leave the screen.
+    :param moving_enemies: dict
     :param level: list
     :param xchange: int
     :param ychange: int
     :return: none
     '''
+    print(moving_enemies)
     y = -BLOCK_HEIGHT
     for row in level:
         x = -BLOCK_WIDTH
-        for block in row:
-            if block == 'W':
+        for letter in row:
+            if letter == 'W':
                 wall = Wall(x=x, y=y)
                 walls.append(wall)
-            elif block == 'E':
+            elif letter == 'E':
                 enemy = Enemy(x=x, y=y)
                 all_sprites.add(enemy)
                 enemies.add(enemy)
-            elif block == 'C':
+            elif letter == 'C':
                 coin = Coin(x=x, y=y)
                 all_sprites.add(coin)
                 coins.add(coin)
-            elif block == 'X':
+            elif letter == 'X':
                 exit_gate = Gate(x=x, y=y)
                 all_sprites.add(exit_gate)
-            elif block == 'P':
+            elif letter == 'P':
                 player.starting_position(x=x, y=y)
+            elif (letter != ' ') and (letter.islower()):
+                path_start = letter           # lowercase letter is start of enemy path
+                path_end = letter.upper()     # uppercase letter is end of enemy path
+
+                start = Position(x=x, y=y)
+                end = find_end(letter=path_end, grid=level)
+                velocity = velocity_dict[letter]
+                enemy = MovingEnemy(start=start, end=end,  velocity=velocity)
+                moving_enemies.add(enemy)
+                enemies.add(enemy)
+                all_sprites.add(enemy)
+
             x += xchange
         y += ychange
     all_sprites.add(player)
@@ -60,7 +107,9 @@ def main():
     score = 0
     current_level = level1()
 
-    draw_level(level=current_level, xchange=BLOCK_WIDTH, ychange=BLOCK_HEIGHT)
+    draw_level(level=current_level[0], velocity_dict=current_level[1], xchange=BLOCK_WIDTH, ychange=BLOCK_HEIGHT)
+    print(moving_enemies)
+
 
     # Run game until it crashes
     crashed = False
@@ -76,7 +125,6 @@ def main():
         # Key Movement for player
         keys = pygame.key.get_pressed()
 
-
         if keys[pygame.K_LEFT]:
             player.move(direction='LEFT')
         if keys[pygame.K_RIGHT]:
@@ -91,7 +139,7 @@ def main():
         collision = pygame.sprite.spritecollide(sprite=player, group=enemies, dokill=False)
         if collision:
             time.sleep(.5)
-            #player.starting_position(x=10, y=20)
+            reset_sprites()
             main()
 
         # Check to see if player made it to the end
@@ -101,6 +149,7 @@ def main():
 
         # Keeps moving enemies in action
         for enemy in moving_enemies:
+            print(enemy.rect.x)
             enemy.move()
 
         for wall in walls:
