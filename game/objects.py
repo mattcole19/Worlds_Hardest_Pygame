@@ -123,8 +123,8 @@ class Gate(pygame.sprite.Sprite):
     '''
     Exit and Entrance to level
     '''
-    width = GATE_SIZE.width
-    height = GATE_SIZE.height
+    width = BLOCK_WIDTH
+    height = BLOCK_HEIGHT
 
     def __init__(self, x, y):
         super().__init__()

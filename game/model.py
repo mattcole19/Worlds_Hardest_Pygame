@@ -54,8 +54,10 @@ def draw_level(level, xchange, ychange):
     all_sprites.add(player)
     return
 
-
 def main():
+    # pygame.mixer.music.load('background-music.wav')
+    # pygame.mixer.music.play(-1)
+    score = 0
     current_level = level1()
 
     draw_level(level=current_level, xchange=BLOCK_WIDTH, ychange=BLOCK_HEIGHT)
@@ -103,9 +105,9 @@ def main():
 
         for wall in walls:
             pygame.draw.rect(display, PURPLE, wall.rect)
-            # if player.rect.colliderect(wall.rect):
-            #     print('collision')
-        collect_coins = pygame.sprite.spritecollide(sprite=player, group=coins, dokill=True)
+
+        if pygame.sprite.spritecollide(sprite=player, group=coins, dokill=True):
+            score += 1
 
         # Draw all sprites
         all_sprites.draw(display)
