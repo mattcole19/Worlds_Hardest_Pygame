@@ -104,7 +104,7 @@ class MovingEnemy(Enemy):
         self.start = start
         self.end = end
 
-    def move(self):
+    def move(self):  # TODO: update this method to allow more movement, take walls into account, etc.
         ''' Only allows sideways movement at the time being '''
         if self.velocity > 0:
             if self.rect.x + self.velocity < self.end.x:

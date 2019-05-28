@@ -34,17 +34,44 @@ Base Level with walls keeping player in screen:
     "WWWWWWWWWWWWWWWWWWWWWW",
 '''
 
+def levelx() -> tuple:
+    velocity_dict = {}
+    level = [
+    "WWWWWWWWWWWWWWWWWWWWWW",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "WWWWWWWWWWWWWWWWWWWWWW",
+    ]
+    return level, velocity_dict
 
 
 def level1() -> tuple:
-    velocity_dict = {'a': 10, 'b': 5} # This dictionary keeps track of the velocity of the enemy
+    velocity_dict = {'a': 10, 'b': 5, 'd': 5} # This dictionary keeps track of the velocity of the enemy
     level = [
     "WWWWWWWWWWWWWWWWWWWWWW",
     "WP                   W",
     "W         a    C    AW",
     "WWWWWWWWWWWWWWWWWWWW W",
     "Wb            C     BW",
-    "W    C        C      W",
+    "W    dC       C     DW",
     "W  WWWWWWWWWWWWWWWWWWW",
     "W                   EW",
     "W                    W",
@@ -63,5 +90,35 @@ def level1() -> tuple:
     "WWWWWWWWWWWWWWWWWWWWWW",
     ]
     return level, velocity_dict
+
+
+def level2() -> tuple:
+    velocity_dict = {'a': 10, 'b': 10, 'd': 10, 'f': 10}
+    level = [
+    "WWWWWWWWWWWWWWWWWWWWWW",
+    "WP                   W",
+    "Wa                  AW",
+    "Wb                  BW",
+    "Wd                  DW",
+    "Wf                  FW",
+    "Wa                  AW",
+    "Wb                  BW",
+    "Wd                  DW",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                    W",
+    "W                   XW",
+    "WWWWWWWWWWWWWWWWWWWWWW",
+    ]
+    return level, velocity_dict
+
 
 

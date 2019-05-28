@@ -105,7 +105,7 @@ def main():
     # pygame.mixer.music.load('background-music.wav')
     # pygame.mixer.music.play(-1)
     score = 0
-    current_level = level1()
+    current_level = level2()
 
     draw_level(level=current_level[0], velocity_dict=current_level[1], xchange=BLOCK_WIDTH, ychange=BLOCK_HEIGHT)
     print(moving_enemies)
